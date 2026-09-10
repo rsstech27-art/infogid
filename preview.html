@@ -1,0 +1,1453 @@
+<title>Мастерская гида</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Inter+Tight:wght@400;500;600&display=swap');
+
+  /* Палитра снята с ai-rss.ru: бирюзовый акцент, коралловый — для второго плана, тёмно-графитовый текст */
+  :root {
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --ink: #2b2b2b;
+    --muted: #676767;
+    --border: #eaeaea;
+    --accent: #19bfb6;
+    --accent-ink: #ffffff;
+    --accent-soft: #e3f8f7;
+    --accent2: #ff8562;
+    --accent2-soft: #ffe9e2;
+    --done: #19bfb6;
+    --danger: #e2543f;
+    --phone-bg: color-mix(in srgb, var(--accent) 10%, #ffffff);
+    --shadow: rgba(12, 29, 28, 0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1817;
+      --surface: #16211f;
+      --ink: #f2f1ee;
+      --muted: #9aa6a4;
+      --border: #263533;
+      --accent: #29d6cc;
+      --accent-ink: #06201e;
+      --accent-soft: #16302e;
+      --accent2: #ff9a7a;
+      --accent2-soft: #33231d;
+      --done: #29d6cc;
+      --danger: #ff7a63;
+      --phone-bg: color-mix(in srgb, var(--accent) 10%, #0c1d1c);
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1817;
+    --surface: #16211f;
+    --ink: #f2f1ee;
+    --muted: #9aa6a4;
+    --border: #263533;
+    --accent: #29d6cc;
+    --accent-ink: #06201e;
+    --accent-soft: #16302e;
+    --accent2: #ff9a7a;
+    --accent2-soft: #33231d;
+    --done: #29d6cc;
+    --danger: #ff7a63;
+    --phone-bg: color-mix(in srgb, var(--accent) 10%, #0c1d1c);
+    --shadow: rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter Tight', -apple-system, sans-serif;
+    padding: 32px 24px 64px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  header.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .eyebrow {
+    font-family: 'Onest', sans-serif; font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-family: 'Onest', sans-serif;
+    font-size: 28px;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .top p.sub {
+    color: var(--muted);
+    max-width: 46ch;
+    margin: 8px 0 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .mode-switch {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .mode-switch button {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    background: none;
+    color: var(--muted);
+    padding: 7px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  .mode-switch button.active { background: var(--accent); color: var(--accent-ink); }
+
+  .workbench {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .workbench { grid-template-columns: 1fr; }
+  }
+
+  /* --- Телефон --- */
+  .phone-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 24px;
+  }
+  .phone {
+    width: 320px;
+    height: 660px;
+    background: var(--phone-bg);
+    border-radius: 40px;
+    border: 10px solid var(--ink);
+    box-shadow: 0 20px 50px var(--shadow);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    top: 10px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 20px;
+    background: var(--ink);
+    border-radius: 12px;
+    z-index: 5;
+  }
+  .phone-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 16px 16px;
+    overflow-y: auto;
+    background: var(--phone-bg);
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .phone-caption { font-family: 'Onest', sans-serif; font-weight: 500; font-size: 12px; color: var(--muted); }
+
+  /* экраны внутри телефона */
+  .p-screen { display: none; height: 100%; flex-direction: column; }
+  .p-screen.active { display: flex; }
+
+  .p-h1 { font-family: 'Onest', sans-serif; font-size: 19px; margin: 0 0 2px; }
+  .p-sub { color: var(--muted); font-size: 12.5px; margin: 0 0 14px; }
+  .p-progress { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 16px; flex-shrink: 0; }
+  .p-progress > div { height: 100%; background: var(--accent); transition: width .3s; }
+
+  .p-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+  .p-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: var(--surface);
+  }
+  .p-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+  }
+  .p-item.done .p-check { background: var(--done); border-color: var(--done); }
+  .p-item-title { font-size: 13.5px; font-weight: 600; }
+
+  .p-empty { margin: auto; text-align: center; color: var(--muted); font-size: 13px; padding: 0 20px; }
+
+  .p-detail .p-back { align-self: flex-start; border: none; background: none; color: var(--accent); font-weight: 600; font-size: 13.5px; padding: 0 0 10px; cursor: pointer; }
+  .p-detail-img {
+    width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border);
+    margin-bottom: 10px; background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px;
+  }
+  .p-detail-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+  .p-detail-text { font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .p-detail-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+
+  .p-substeps-title { font-family: 'Onest', sans-serif; font-weight: 600; font-size: 12.5px; color: var(--muted); margin: 4px 0 2px; text-transform: uppercase; letter-spacing: .03em; }
+  .p-substep-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+
+  /* Блок «плашка» — как «Время» / «Нулевой этап» на референсе */
+  .p-callout {
+    background: var(--accent2-soft);
+    border: 1px solid color-mix(in srgb, var(--accent2) 35%, transparent);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .p-callout .p-callout-label { font-family: 'Onest', sans-serif; font-weight: 600; font-size: 12.5px; color: var(--ink); margin-bottom: 2px; }
+  .p-callout .p-callout-text { font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+
+  /* Блок «список» — чек-лист с точками, как «Что ты получишь» */
+  .p-list-block { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .p-list-block li { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; line-height: 1.5; }
+  .p-list-block li::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    flex-shrink: 0; margin-top: 6px;
+  }
+  .p-complete-btn {
+    margin-top: 12px; border: none; border-radius: 10px; background: var(--accent); color: var(--accent-ink);
+    font: inherit; font-weight: 600; font-size: 13.5px; padding: 11px; cursor: pointer; flex-shrink: 0;
+  }
+  .p-complete-btn[disabled] { background: var(--done); opacity: .9; cursor: default; }
+
+  .p-locked { align-items: center; justify-content: center; text-align: center; gap: 10px; padding: 0 24px; }
+  .p-locked .icon { font-size: 34px; }
+  .p-locked h2 { font-family: 'Onest', sans-serif; font-size: 17px; margin: 0; }
+  .p-locked p { color: var(--muted); font-size: 12.5px; margin: 0; line-height: 1.5; }
+
+  /* --- Материалы (список файлов по всем шагам) --- */
+  .p-materials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+  .p-material-row {
+    border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px; background: var(--surface);
+  }
+  .p-material-row .thumb {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; overflow: hidden;
+  }
+  .p-material-row .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .p-material-row .info { flex: 1; min-width: 0; }
+  .p-material-row .info .name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .p-material-row .info .step { font-size: 11.5px; color: var(--muted); }
+  .p-material-row .get-btn {
+    font-family: 'Onest', sans-serif; font-weight: 600; font-size: 11.5px; color: var(--accent);
+    background: var(--accent-soft); border: none; border-radius: 20px; padding: 6px 12px; flex-shrink: 0; cursor: pointer;
+  }
+
+  /* --- Нижняя навигация телефона --- */
+  .phone-nav {
+    display: flex;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .phone-nav.hidden { display: none; }
+  .phone-nav button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    border: none; background: none; padding: 8px 4px 10px; cursor: pointer;
+    font-family: 'Onest', sans-serif; font-size: 10.5px; color: var(--muted);
+  }
+  .phone-nav button .nav-icon { font-size: 17px; line-height: 1; }
+  .phone-nav button.active { color: var(--accent); }
+
+  /* --- Панель редактирования --- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .panel h2 {
+    font-family: 'Onest', sans-serif;
+    font-size: 16px;
+    margin: 0 0 4px;
+  }
+  .panel > p.hint { color: var(--muted); font-size: 13px; margin: 0 0 18px; line-height: 1.5; }
+
+  .step-editor-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .step-editor-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .step-editor-card.nested {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    background: var(--surface);
+  }
+  .step-editor-card.nested .step-editor-head { background: var(--surface); }
+  .step-editor-card.nested .step-num { color: var(--accent); }
+  .step-editor-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    background: var(--bg);
+  }
+  .step-num {
+    font-family: 'Onest', sans-serif; font-weight: 600;
+    font-size: 11px;
+    color: var(--muted);
+    width: 22px;
+  }
+  .step-editor-head .name { font-weight: 600; font-size: 14px; flex: 1; }
+  .step-editor-head .chev { color: var(--muted); font-size: 12px; transition: transform .2s; }
+  .step-editor-card.open .chev { transform: rotate(90deg); }
+
+  .step-editor-body {
+    display: none;
+    padding: 14px;
+    border-top: 1px solid var(--border);
+    flex-direction: column;
+    gap: 10px;
+  }
+  .step-editor-card.open .step-editor-body { display: flex; }
+
+  label.field-label {
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .field-with-bold { position: relative; }
+  .field-with-bold textarea { padding-right: 34px; }
+  .bold-btn {
+    position: absolute; top: 6px; right: 6px; width: 24px; height: 24px;
+    border: 1px solid var(--border); background: var(--surface); border-radius: 6px;
+    font-weight: 700; font-size: 12px; color: var(--ink); cursor: pointer; line-height: 1;
+  }
+  .link-btn {
+    position: absolute; top: 6px; right: 34px; width: 24px; height: 24px;
+    border: 1px solid var(--border); background: var(--surface); border-radius: 6px;
+    font-size: 12px; color: var(--ink); cursor: pointer; line-height: 1;
+  }
+  .field-with-bold textarea { padding-right: 62px; }
+  .rich-link { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+  input[type="text"], textarea {
+    font: inherit; font-size: 13.5px;
+    width: 100%; border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 10px; background: var(--bg); color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 64px; }
+
+  .shot-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .shot-preview {
+    width: 56px; height: 56px; border-radius: 8px; border: 1px dashed var(--border);
+    display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;
+    color: var(--muted); font-size: 10px; text-align: center;
+  }
+  .shot-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .upload-btn {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    border-radius: 8px; padding: 8px 12px;
+  }
+  .file-input { display: none; }
+
+  .attachment-list { display: flex; flex-direction: column; gap: 6px; }
+  .attachment-chip {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px;
+    font-size: 12.5px; background: var(--bg);
+  }
+  .attachment-chip .thumb {
+    width: 30px; height: 30px; border-radius: 6px; overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; background: var(--surface);
+    border: 1px solid var(--border); font-size: 13px;
+  }
+  .attachment-chip .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .attachment-chip .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .attachment-chip .remove { border: none; background: none; color: var(--danger); cursor: pointer; font-size: 12px; font-weight: 600; }
+  .attachment-chip .cover-badge {
+    font-family: 'Onest', sans-serif; font-weight: 600; font-size: 9.5px; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
+  }
+  .in-materials-toggle {
+    display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted);
+    flex-shrink: 0; white-space: nowrap; cursor: pointer;
+  }
+  .in-materials-toggle input { margin: 0; accent-color: var(--accent); cursor: pointer; }
+
+  .row-actions { display: flex; justify-content: flex-end; }
+  .delete-btn { border: none; background: none; color: var(--danger); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+
+  .add-step-btn {
+    width: 100%; border: 1px dashed var(--accent); color: var(--accent);
+    background: var(--accent-soft); border-radius: 12px; padding: 12px; font: inherit; font-weight: 600;
+    font-size: 14px; cursor: pointer;
+  }
+
+  /* Блоки оформления текста внутри шага */
+  .block-list { display: flex; flex-direction: column; gap: 8px; }
+  .block-card { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--bg); display: flex; flex-direction: column; gap: 6px; }
+  .block-card-head { display: flex; align-items: center; justify-content: space-between; }
+  .block-kind-badge {
+    font-family: 'Onest', sans-serif; font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: .03em;
+    color: var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 2px 7px;
+  }
+  .add-block-row { display: flex; gap: 8px; }
+  .add-block-row button {
+    flex: 1; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    border: 1px dashed var(--border); background: var(--surface); color: var(--ink);
+    border-radius: 8px; padding: 8px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .field-code {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;
+    line-height: 1.6; overflow-x: auto; white-space: pre;
+  }
+  .field-code b { color: var(--ink); font-weight: 600; }
+
+  .note {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--accent2-soft); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5;
+    border: 1px solid color-mix(in srgb, var(--accent2) 30%, transparent);
+  }
+  .note b { color: var(--ink); }
+
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-row .lbl { font-size: 13.5px; }
+  .toggle-row .lbl small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: var(--border); border-radius: 22px; cursor: pointer; transition: .2s; }
+  .slider::before { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+  .switch input:checked + .slider { background: var(--accent); }
+  .switch input:checked + .slider::before { transform: translateX(16px); }
+
+  footer.export-row { margin-top: 18px; display: flex; gap: 10px; }
+  .btn-secondary {
+    font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    border-radius: 9px; padding: 10px 14px; flex: 1;
+  }
+  .btn-primary {
+    font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+    border: none; background: var(--accent); color: var(--accent-ink);
+    border-radius: 9px; padding: 10px 14px; flex: 1;
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Гид · мастерская контента</p>
+      <h1>Собери шаги, посмотри, как будет выглядеть у клиента</h1>
+      <p class="sub">Слева — телефон с живым превью мини-аппа. Справа — редактор: правь общие тексты аппа, добавляй шаги с несколькими файлами (фото, PDF, видео), переключай состояние доступа. Всё сохраняется в этом браузере, пока ты не выгрузишь итог.</p>
+    </div>
+    <div class="mode-switch" id="theme-switch">
+      <button data-theme="light" class="active">Светлая</button>
+      <button data-theme="dark">Тёмная</button>
+    </div>
+  </header>
+
+  <div class="workbench">
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="phone-screen" id="phone-screen">
+
+          <div class="p-screen active" id="p-list">
+            <h1 class="p-h1" id="p-app-title">Гид</h1>
+            <p class="p-sub" id="p-progress-label">Пройдено 0 из 0 шагов</p>
+            <div class="p-progress"><div id="p-progress-fill" style="width:0%"></div></div>
+            <ul class="p-list" id="p-step-list"></ul>
+            <div class="p-empty" id="p-empty" style="display:none;">Пока нет ни одного шага — добавь первый в панели справа.</div>
+          </div>
+
+          <div class="p-screen p-detail" id="p-detail">
+            <button class="p-back" id="p-back-btn">‹ Назад</button>
+            <div class="p-detail-img" id="p-detail-img">нет фото</div>
+            <h1 class="p-h1" id="p-detail-title"></h1>
+            <div class="p-detail-body">
+              <div class="p-detail-text" id="p-detail-text"></div>
+              <div id="p-detail-blocks"></div>
+              <div class="attachment-list" id="p-detail-files"></div>
+              <div id="p-detail-substeps"></div>
+            </div>
+            <button class="p-complete-btn" id="p-complete-btn">Отметить шаг пройденным</button>
+          </div>
+
+          <div class="p-screen p-locked" id="p-locked">
+            <div class="icon">🔒</div>
+            <h2 id="p-locked-title">Доступ закончился</h2>
+            <p id="p-locked-text">Срок доступа к гиду истёк. Чтобы продолжить, свяжитесь для продления.</p>
+          </div>
+
+          <div class="p-screen" id="p-materials">
+            <h1 class="p-h1">Материалы</h1>
+            <p class="p-sub">Все файлы из шагов гида в одном месте</p>
+            <ul class="p-materials-list" id="p-materials-list"></ul>
+            <div class="p-empty" id="p-materials-empty" style="display:none;">Пока нет ни одного файла — загрузи их в шагах в панели справа.</div>
+          </div>
+
+        </div>
+        <nav class="phone-nav" id="phone-nav">
+          <button class="nav-tab active" data-tab="list"><span class="nav-icon">📘</span>Уроки</button>
+          <button class="nav-tab" data-tab="materials"><span class="nav-icon">🗂️</span>Материалы</button>
+        </nav>
+      </div>
+      <span class="phone-caption" id="phone-state-caption">состояние: список шагов</span>
+    </div>
+
+    <div class="panel">
+      <h2>Тексты приложения</h2>
+      <p class="hint">Название и общие надписи, которые не привязаны к конкретному шагу.</p>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        <label class="field-label">Название аппа (заголовок на главном экране)</label>
+        <input type="text" id="setting-app-title" placeholder="Гид">
+
+        <label class="field-label">Заголовок экрана «доступ закрыт»</label>
+        <input type="text" id="setting-locked-title" placeholder="Доступ закончился">
+
+        <label class="field-label">Текст экрана «доступ закрыт»</label>
+        <textarea id="setting-locked-text" placeholder="Срок доступа к гиду истёк..."></textarea>
+
+        <label class="field-label">Текст кнопки прохождения шага</label>
+        <input type="text" id="setting-complete-btn" placeholder="Отметить шаг пройденным">
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Шаги инструкции</h2>
+      <p class="hint">У каждого шага — заголовок, текст, оформление и файлы. Внутри шага можно открыть «Подшаги» и разбить его на 1.1, 1.2 и так далее — в телефоне такой шаг станет раскрывающейся группой.</p>
+
+      <div class="step-editor-list" id="step-editor-list"></div>
+      <button class="add-step-btn" id="add-step-btn">+ Добавить шаг</button>
+
+      <div class="divider"></div>
+
+      <h2>Доступ клиента</h2>
+      <p class="hint">Проверь, как выглядит апп в разных состояниях доступа — переключатель ниже эмулирует то, что на сервере считается по дате первого входа.</p>
+      <div class="toggle-row">
+        <div class="lbl">Доступ активен<small>90 дней с первого входа ещё не прошли</small></div>
+        <label class="switch"><input type="checkbox" id="access-toggle" checked><span class="slider"></span></label>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Как это попадёт на сервер</h2>
+      <p class="hint">Эта страница — только для сборки и визуальной проверки контента. В рабочем гиде тексты и шаги отдаёт бэкенд, а не браузер:</p>
+      <div class="field-code"><b>backend/steps.json</b>
+{
+  "appTitle": "...",
+  "lockedTitle": "...",
+  "lockedText": "...",
+  "completeButtonText": "...",
+  "steps": [
+    { "id": "step-1", "title": "...", "text": "...",
+      "blocks": [{ "type": "callout", "label": "...", "text": "..." }],
+      "attachments": [{ "type": "image", "file": "/files/..." }],
+      "children": [ { "id": "step-1-1", "title": "...", ... } ] }
+  ]
+}</div>
+      <div class="note" style="margin-top:12px;">
+        <span>💡</span>
+        <div>Нажми «Показать JSON» ниже — получишь файл в точности такой структуры. Останется положить рядом настоящие файлы (скриншоты, PDF, видео) в папку <code>files/</code> на сервере и заменить <code>backend/steps.json</code> на выгруженный.</div>
+      </div>
+
+      <footer class="export-row">
+        <button class="btn-secondary" id="reset-btn">Сбросить</button>
+        <button class="btn-primary" id="export-btn">Показать JSON</button>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<div id="export-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; padding:24px; z-index:50;">
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px; max-width:520px; width:100%; max-height:80vh; display:flex; flex-direction:column; gap:12px;">
+    <h2 style="margin:0;">steps.json</h2>
+    <p class="hint" style="margin:0;">Скопируй текст ниже и вставь вместо содержимого <code>backend/steps.json</code>. Скриншоты, загруженные здесь для примера, в файле заменены путями вида <code>/screenshots/step-id.png</code> — сами картинки нужно положить на сервер отдельно (см. DEPLOY.md).</p>
+    <textarea id="export-textarea" readonly style="flex:1; min-height:240px; font-family:'IBM Plex Mono',monospace; font-size:12px;"></textarea>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-secondary" id="close-modal-btn" style="flex:1;">Закрыть</button>
+      <button class="btn-primary" id="copy-json-btn" style="flex:1;">Скопировать</button>
+    </div>
+    <p id="copy-status" class="hint" style="margin:0; min-height:16px;"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'gid-preview-steps-v2';
+  const SETTINGS_KEY = 'gid-preview-settings-v1';
+
+  const sample = [
+    {
+      id: 'step-1',
+      title: 'Подключаем канал в Telegram',
+      text: 'Самый важный технический шаг. Один раз проходишь — и у тебя полностью рабочий канал.',
+      blocks: [
+        { id: 'block-time', type: 'callout', label: 'Время', text: 'видео 12 минут, настройка своими руками 10–15 минут' },
+        { id: 'block-checklist', type: 'list', items: ['Токен бота от @BotFather', 'Подключённый канал в настройках', 'Проверенное тестовое сообщение'] }
+      ],
+      attachments: [],
+      children: [
+        {
+          id: 'step-1-1',
+          title: 'Получаем токен у @BotFather',
+          text: 'Напиши @BotFather команду /newbot, придумай имя — в ответ придёт токен вида 123456:AAA...',
+          blocks: [], attachments: [], children: []
+        },
+        {
+          id: 'step-1-2',
+          title: 'Вставляем токен в настройки',
+          text: 'Открой настройки нейропродавца → «Каналы» → «Добавить Telegram», вставь токен и нажми «Проверить подключение».',
+          blocks: [], attachments: [], children: []
+        }
+      ]
+    },
+    {
+      id: 'step-2',
+      title: 'Настраиваем сценарий ответа',
+      text: 'В разделе «Сценарии» выбери шаблон «Первый контакт» — он уже настроен под приветствие и сбор контакта клиента.',
+      blocks: [], attachments: [], children: []
+    },
+    {
+      id: 'step-3',
+      title: 'Тестируем на себе',
+      text: 'Напиши боту от своего аккаунта любое сообщение и убедись, что ответ приходит в течение нескольких секунд.',
+      blocks: [], attachments: [], children: []
+    }
+  ];
+
+  const defaultSettings = {
+    appTitle: 'Гид',
+    lockedTitle: 'Доступ закончился',
+    lockedText: 'Срок доступа к гиду истёк. Чтобы продолжить, свяжитесь для продления.',
+    completeBtn: 'Отметить шаг пройденным'
+  };
+
+  function migrateOldSteps(oldSteps) {
+    return oldSteps.map((s) => ({
+      id: s.id,
+      title: s.title || '',
+      text: s.text || '',
+      blocks: s.blocks || [],
+      attachments: s.screenshot
+        ? [{ id: uid('file'), name: 'screenshot.png', type: 'image', dataUrl: s.screenshot }]
+        : (s.attachments || []),
+      children: (s.children || []).map((c) => ({
+        id: c.id, title: c.title || '', text: c.text || '',
+        blocks: c.blocks || [], attachments: c.attachments || [], children: c.children || []
+      }))
+    }));
+  }
+
+  function load() {
+    try {
+      const rawV2 = localStorage.getItem(STORAGE_KEY);
+      if (rawV2) return JSON.parse(rawV2);
+      const rawV1 = localStorage.getItem('gid-preview-steps-v1');
+      if (rawV1) return migrateOldSteps(JSON.parse(rawV1));
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(sample));
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(steps)); } catch (e) {}
+  }
+
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) return Object.assign({}, defaultSettings, JSON.parse(raw));
+    } catch (e) {}
+    return Object.assign({}, defaultSettings);
+  }
+  function saveSettings() {
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) {}
+  }
+
+  let steps = load();
+  let settings = loadSettings();
+  const openIds = new Set(steps[0] ? [steps[0].id] : []);
+  let completed = new Set();
+  let currentPreviewStep = null;
+  let accessOk = true;
+
+  function uid(prefix) { return (prefix || 'step') + '-' + Math.random().toString(36).slice(2, 8); }
+
+  function fileKind(mime, name) {
+    if (mime && mime.startsWith('image/')) return 'image';
+    if (mime && mime.startsWith('video/')) return 'video';
+    if (mime === 'application/pdf' || /\.pdf$/i.test(name || '')) return 'pdf';
+    return 'file';
+  }
+  function fileIcon(kind) {
+    return { image: '🖼️', video: '🎞️', pdf: '📄', file: '📎' }[kind] || '📎';
+  }
+
+  // ---------- Настройки приложения ----------
+  function bindSettingsFields() {
+    const map = {
+      'setting-app-title': 'appTitle',
+      'setting-locked-title': 'lockedTitle',
+      'setting-locked-text': 'lockedText',
+      'setting-complete-btn': 'completeBtn'
+    };
+    Object.keys(map).forEach((elId) => {
+      const el = document.getElementById(elId);
+      el.value = settings[map[elId]];
+      el.addEventListener('input', (e) => {
+        settings[map[elId]] = e.target.value;
+        saveSettings();
+        applySettingsToPhone();
+      });
+    });
+  }
+
+  function applySettingsToPhone() {
+    document.getElementById('p-app-title').textContent = settings.appTitle || 'Гид';
+    document.getElementById('p-locked-title').textContent = settings.lockedTitle || defaultSettings.lockedTitle;
+    document.getElementById('p-locked-text').textContent = settings.lockedText || defaultSettings.lockedText;
+    if (currentPreviewStep && !completed.has(currentPreviewStep.id)) {
+      document.getElementById('p-complete-btn').textContent = settings.completeBtn || defaultSettings.completeBtn;
+    }
+  }
+
+  // ---------- Рендер телефона ----------
+  let activeTab = 'list'; // 'list' | 'materials' — какая вкладка нижней навигации открыта
+
+  function showPScreen(name) {
+    document.querySelectorAll('.p-screen').forEach((el) => el.classList.remove('active'));
+    document.getElementById('p-' + name).classList.add('active');
+    const labels = { list: 'список шагов', detail: 'карточка шага', locked: 'доступ закрыт', materials: 'материалы' };
+    document.getElementById('phone-state-caption').textContent = 'состояние: ' + labels[name];
+
+    const nav = document.getElementById('phone-nav');
+    nav.classList.toggle('hidden', name === 'detail' || name === 'locked');
+    if (name === 'list' || name === 'materials') {
+      activeTab = name;
+      document.querySelectorAll('.nav-tab').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
+    }
+  }
+
+  document.querySelectorAll('.nav-tab').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeTab = btn.dataset.tab;
+      renderPhone();
+    });
+  });
+
+  function flattenAll(list) {
+    let out = [];
+    (list || []).forEach((s) => {
+      out.push(s);
+      if (s.children && s.children.length) out = out.concat(flattenAll(s.children));
+    });
+    return out;
+  }
+
+  function renderMaterials() {
+    const list = document.getElementById('p-materials-list');
+    const empty = document.getElementById('p-materials-empty');
+    list.innerHTML = '';
+    const rows = [];
+    flattenAll(steps).forEach((s) => {
+      (s.attachments || []).filter((a) => a.includeInMaterials).forEach((a) => {
+        rows.push({ attachment: a, stepTitle: s.title || 'Без названия' });
+      });
+    });
+
+    if (rows.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      rows.forEach(({ attachment: a, stepTitle }) => {
+        const li = document.createElement('li');
+        li.className = 'p-material-row';
+        li.innerHTML = `
+          <div class="thumb">${a.type === 'image' ? `<img src="${a.dataUrl}" alt="">` : fileIcon(a.type)}</div>
+          <div class="info">
+            <div class="name">${escapeHtml(a.name)}</div>
+            <div class="step">${escapeHtml(stepTitle)}</div>
+          </div>
+          <button class="get-btn" type="button">Получить</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+  }
+
+  // Листовые шаги — те, что реально проходятся и считаются в прогресс
+  // (шаг с подшагами сам по себе не отмечается — прогресс идёт по вложенным).
+  function flattenLeaves(list) {
+    let out = [];
+    (list || []).forEach((s) => {
+      if (s.children && s.children.length) out = out.concat(flattenLeaves(s.children));
+      else out.push(s);
+    });
+    return out;
+  }
+
+
+  function renderStepListInto(ul, list, numberPrefix) {
+    list.forEach((s, i) => {
+      const number = numberPrefix ? `${numberPrefix}.${i + 1}` : `${i + 1}`;
+      const hasChildren = s.children && s.children.length > 0;
+      const li = document.createElement('li');
+
+      if (hasChildren) {
+        // Шаг с подшагами тоже открывается своей карточкой (у него есть свой текст) —
+        // просто справа виден счётчик прогресса по вложенным подшагам, а не галочка.
+        const leaves = flattenLeaves(s.children);
+        const done = leaves.filter((x) => completed.has(x.id)).length;
+        li.className = 'p-item';
+        li.innerHTML = `<div class="p-check" style="background:transparent;border-color:var(--border);color:var(--muted);font-size:9.5px;">${done}/${leaves.length}</div><div class="p-item-title">${number}. ${escapeHtml(s.title || 'Без названия')}</div>`;
+        li.addEventListener('click', () => openPreviewStep(s, [s]));
+        ul.appendChild(li);
+      } else {
+        li.className = 'p-item' + (completed.has(s.id) ? ' done' : '');
+        li.innerHTML = `<div class="p-check">${completed.has(s.id) ? '✓' : ''}</div><div class="p-item-title">${number}. ${escapeHtml(s.title || 'Без названия')}</div>`;
+        li.addEventListener('click', () => openPreviewStep(s, [s]));
+        ul.appendChild(li);
+      }
+    });
+  }
+
+  function renderPhone() {
+    if (!accessOk) { showPScreen('locked'); return; }
+
+    const list = document.getElementById('p-step-list');
+    const empty = document.getElementById('p-empty');
+    list.innerHTML = '';
+
+    if (steps.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      renderStepListInto(list, steps, '');
+    }
+
+    const leaves = flattenLeaves(steps);
+    const doneCount = leaves.filter((s) => completed.has(s.id)).length;
+    const label = document.getElementById('p-progress-label');
+    label.textContent = `Пройдено ${doneCount} из ${leaves.length} шагов`;
+    document.getElementById('p-progress-fill').style.width = leaves.length ? `${(doneCount / leaves.length) * 100}%` : '0%';
+
+    renderMaterials();
+
+    if (!document.getElementById('p-detail').classList.contains('active')) {
+      showPScreen(activeTab);
+    }
+  }
+
+  let navStack = []; // цепочка открытых карточек — для кнопки «Назад» между шагом и подшагом
+
+  function openPreviewStep(step, stack) {
+    if (stack) navStack = stack;
+    currentPreviewStep = step;
+    document.getElementById('p-detail-title').textContent = step.title || 'Без названия';
+    document.getElementById('p-detail-text').innerHTML = renderRichText(step.text || '');
+
+    const blocksHolder = document.getElementById('p-detail-blocks');
+    blocksHolder.innerHTML = '';
+    (step.blocks || []).forEach((b) => {
+      if (b.type === 'list') {
+        const ul = document.createElement('ul');
+        ul.className = 'p-list-block';
+        (b.items || []).filter((i) => i.trim()).forEach((item) => {
+          const li = document.createElement('li');
+          li.innerHTML = renderRichText(item);
+          ul.appendChild(li);
+        });
+        if (ul.children.length) blocksHolder.appendChild(ul);
+      } else if (b.type === 'callout') {
+        const box = document.createElement('div');
+        box.className = 'p-callout';
+        box.innerHTML = `<div class="p-callout-label">${renderRichText(b.label || '')}</div><div class="p-callout-text">${renderRichText(b.text || '')}</div>`;
+        blocksHolder.appendChild(box);
+      } else if (b.type === 'text') {
+        const p = document.createElement('div');
+        p.className = 'p-detail-text';
+        p.innerHTML = renderRichText(b.text || '');
+        if (p.innerHTML.trim()) blocksHolder.appendChild(p);
+      }
+    });
+
+    const attachments = step.attachments || [];
+    const coverImage = attachments.find((a) => a.type === 'image');
+    const imgHolder = document.getElementById('p-detail-img');
+    if (coverImage) {
+      imgHolder.innerHTML = `<img src="${coverImage.dataUrl}" alt="">`;
+      imgHolder.style.display = '';
+    } else {
+      imgHolder.innerHTML = '';
+      imgHolder.style.display = 'none';
+    }
+
+    const filesHolder = document.getElementById('p-detail-files');
+    const restFiles = attachments.filter((a) => a !== coverImage);
+    filesHolder.innerHTML = '';
+    restFiles.forEach((a) => {
+      const chip = document.createElement('div');
+      chip.className = 'attachment-chip';
+      chip.innerHTML = `<div class="thumb">${a.type === 'image' ? `<img src="${a.dataUrl}" alt="">` : fileIcon(a.type)}</div><div class="name">${escapeHtml(a.name)}</div>`;
+      filesHolder.appendChild(chip);
+    });
+
+    const substepsHolder = document.getElementById('p-detail-substeps');
+    substepsHolder.innerHTML = '';
+    const btn = document.getElementById('p-complete-btn');
+    const hasChildren = step.children && step.children.length > 0;
+
+    if (hasChildren) {
+      btn.style.display = 'none';
+      const title = document.createElement('div');
+      title.className = 'p-substeps-title';
+      title.textContent = 'Подшаги';
+      const ul = document.createElement('ul');
+      ul.className = 'p-substep-list';
+      step.children.forEach((child, i) => {
+        const li = document.createElement('li');
+        li.className = 'p-item' + (completed.has(child.id) ? ' done' : '');
+        li.innerHTML = `<div class="p-check">${completed.has(child.id) ? '✓' : ''}</div><div class="p-item-title">${i + 1}. ${escapeHtml(child.title || 'Без названия')}</div>`;
+        li.addEventListener('click', () => openPreviewStep(child, navStack.concat([child])));
+        ul.appendChild(li);
+      });
+      substepsHolder.append(title, ul);
+    } else {
+      btn.style.display = '';
+      const done = completed.has(step.id);
+      btn.textContent = done ? 'Шаг пройден ✓' : (settings.completeBtn || defaultSettings.completeBtn);
+      btn.disabled = done;
+    }
+
+    showPScreen('detail');
+  }
+
+  document.getElementById('p-back-btn').addEventListener('click', () => {
+    navStack.pop(); // убираем текущую карточку
+    if (navStack.length > 0) {
+      openPreviewStep(navStack[navStack.length - 1], navStack);
+    } else {
+      showPScreen(activeTab);
+      renderPhone();
+    }
+  });
+  document.getElementById('p-complete-btn').addEventListener('click', () => {
+    if (!currentPreviewStep || completed.has(currentPreviewStep.id)) return;
+    completed.add(currentPreviewStep.id);
+    openPreviewStep(currentPreviewStep);
+    renderPhoneListOnly();
+  });
+  function renderPhoneListOnly() {
+    const wasDetail = document.getElementById('p-detail').classList.contains('active');
+    renderPhone();
+    if (wasDetail) showPScreen('detail');
+  }
+
+  document.getElementById('access-toggle').addEventListener('change', (e) => {
+    accessOk = e.target.checked;
+    renderPhone();
+  });
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  // Простая разметка: **жирный текст** → <b>, переносы строк → <br>.
+  // Экранируем HTML заранее, чтобы вставка в innerHTML была безопасной.
+  function renderRichText(str) {
+    const escaped = escapeHtml(str || '');
+    // [текст](ссылка) → кликабельное слово-ссылка
+    const withLinks = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" class="rich-link">$1</a>');
+    const withBold = withLinks.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    return withBold.replace(/\n/g, '<br>');
+  }
+
+  // Добавляет кнопку «Ж», которая оборачивает выделенный текст в ** ** (жирный)
+  function attachBoldButton(textareaEl, onInput) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'bold-btn';
+    btn.textContent = 'Ж';
+    btn.title = 'Выделить текст и нажать — сделает его жирным';
+    btn.addEventListener('click', () => {
+      const start = textareaEl.selectionStart;
+      const end = textareaEl.selectionEnd;
+      const value = textareaEl.value;
+      const selected = value.slice(start, end) || 'жирный текст';
+      const newValue = value.slice(0, start) + '**' + selected + '**' + value.slice(end);
+      textareaEl.value = newValue;
+      textareaEl.focus();
+      textareaEl.selectionStart = start + 2;
+      textareaEl.selectionEnd = start + 2 + selected.length;
+      onInput(newValue);
+    });
+    return btn;
+  }
+
+  // Добавляет кнопку «🔗», которая оборачивает выделенное слово в [слово](ссылка)
+  // и сразу выделяет место под саму ссылку, чтобы её можно было вписать
+  function attachLinkButton(textareaEl, onInput) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'link-btn';
+    btn.textContent = '🔗';
+    btn.title = 'Выделить слово и нажать — сделает его ссылкой';
+    btn.addEventListener('click', () => {
+      const start = textareaEl.selectionStart;
+      const end = textareaEl.selectionEnd;
+      const value = textareaEl.value;
+      const selected = value.slice(start, end) || 'текст ссылки';
+      const urlPlaceholder = 'https://';
+      const insert = '[' + selected + '](' + urlPlaceholder + ')';
+      const newValue = value.slice(0, start) + insert + value.slice(end);
+      textareaEl.value = newValue;
+      textareaEl.focus();
+      const urlStart = start + selected.length + 3; // после "[слово]("
+      textareaEl.selectionStart = urlStart;
+      textareaEl.selectionEnd = urlStart + urlPlaceholder.length;
+      onInput(newValue);
+    });
+    return btn;
+  }
+
+  // ---------- Редактор шагов ----------
+  // Общие поля редактора шага (заголовок, текст, блоки оформления, файлы) —
+  // используются и для шагов верхнего уровня, и для подшагов (1.1, 1.2 ...).
+  function buildStepFieldset(s, { titlePlaceholder }) {
+    const frag = document.createDocumentFragment();
+
+    const titleLabel = document.createElement('label');
+    titleLabel.className = 'field-label';
+    titleLabel.textContent = 'Заголовок шага';
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.value = s.title;
+    titleInput.placeholder = titlePlaceholder || 'Например: Подключаем канал в Telegram';
+    titleInput.addEventListener('input', (e) => { s.title = e.target.value; save(); renderEditorTitles(); renderPhone(); });
+
+    const textLabel = document.createElement('label');
+    textLabel.className = 'field-label';
+    textLabel.textContent = 'Текст инструкции (**жирным**, [слово](ссылка) — ссылкой)';
+    const textWrap = document.createElement('div');
+    textWrap.className = 'field-with-bold';
+    const textArea = document.createElement('textarea');
+    textArea.value = s.text;
+    textArea.placeholder = 'Что нужно сделать на этом шаге';
+    textArea.addEventListener('input', (e) => { s.text = e.target.value; save(); renderPhone(); });
+    const textBoldBtn = attachBoldButton(textArea, (val) => { s.text = val; save(); renderPhone(); });
+    const textLinkBtn = attachLinkButton(textArea, (val) => { s.text = val; save(); renderPhone(); });
+    textWrap.append(textArea, textBoldBtn, textLinkBtn);
+
+    const blocksLabel = document.createElement('label');
+    blocksLabel.className = 'field-label';
+    blocksLabel.textContent = 'Оформление текста (текст, список или плашка)';
+
+    if (!s.blocks) s.blocks = [];
+    const blockList = document.createElement('div');
+    blockList.className = 'block-list';
+
+    s.blocks.forEach((b) => {
+      const bCard = document.createElement('div');
+      bCard.className = 'block-card';
+
+      const cardHead = document.createElement('div');
+      cardHead.className = 'block-card-head';
+      const badge = document.createElement('span');
+      badge.className = 'block-kind-badge';
+      badge.textContent = b.type === 'list' ? 'Список' : (b.type === 'callout' ? 'Плашка' : 'Текст');
+      const removeBlockBtn = document.createElement('button');
+      removeBlockBtn.type = 'button';
+      removeBlockBtn.className = 'remove';
+      removeBlockBtn.textContent = '✕ Убрать';
+      removeBlockBtn.addEventListener('click', () => {
+        s.blocks = s.blocks.filter((x) => x.id !== b.id);
+        save();
+        renderEditor();
+        renderPhone();
+      });
+      cardHead.append(badge, removeBlockBtn);
+      bCard.appendChild(cardHead);
+
+      if (b.type === 'list') {
+        const ta = document.createElement('textarea');
+        ta.placeholder = 'Каждый пункт с новой строки, например:\nПолностью настроенный Claude на компьютере\nСвязку Claude с твоим Telegram за один шаг\n**Жирным** тоже можно';
+        ta.value = (b.items || []).join('\n');
+        const wrap = document.createElement('div');
+        wrap.className = 'field-with-bold';
+        ta.addEventListener('input', (e) => {
+          b.items = e.target.value.split('\n');
+          save();
+          renderPhone();
+        });
+        const boldBtn = attachBoldButton(ta, (val) => { b.items = val.split('\n'); save(); renderPhone(); });
+        const linkBtn = attachLinkButton(ta, (val) => { b.items = val.split('\n'); save(); renderPhone(); });
+        wrap.append(ta, boldBtn, linkBtn);
+        bCard.appendChild(wrap);
+      } else if (b.type === 'callout') {
+        const labelInput = document.createElement('input');
+        labelInput.type = 'text';
+        labelInput.placeholder = 'Заголовок плашки, например: Время';
+        labelInput.value = b.label || '';
+        labelInput.addEventListener('input', (e) => { b.label = e.target.value; save(); renderPhone(); });
+
+        const textWrapB = document.createElement('div');
+        textWrapB.className = 'field-with-bold';
+        const textInput = document.createElement('textarea');
+        textInput.placeholder = 'Текст плашки, например: видео 1 час 07 минут, настройка своими руками 30–60 минут';
+        textInput.value = b.text || '';
+        textInput.addEventListener('input', (e) => { b.text = e.target.value; save(); renderPhone(); });
+        const boldBtnB = attachBoldButton(textInput, (val) => { b.text = val; save(); renderPhone(); });
+        const linkBtnB = attachLinkButton(textInput, (val) => { b.text = val; save(); renderPhone(); });
+        textWrapB.append(textInput, boldBtnB, linkBtnB);
+
+        bCard.append(labelInput, textWrapB);
+      } else {
+        // обычный текстовый блок — ещё один абзац
+        const textWrapC = document.createElement('div');
+        textWrapC.className = 'field-with-bold';
+        const textInput = document.createElement('textarea');
+        textInput.placeholder = 'Дополнительный текст (**слово** — жирным)';
+        textInput.value = b.text || '';
+        textInput.addEventListener('input', (e) => { b.text = e.target.value; save(); renderPhone(); });
+        const boldBtnC = attachBoldButton(textInput, (val) => { b.text = val; save(); renderPhone(); });
+        const linkBtnC = attachLinkButton(textInput, (val) => { b.text = val; save(); renderPhone(); });
+        textWrapC.append(textInput, boldBtnC, linkBtnC);
+        bCard.appendChild(textWrapC);
+      }
+
+      blockList.appendChild(bCard);
+    });
+
+    const addBlockRow = document.createElement('div');
+    addBlockRow.className = 'add-block-row';
+    const addTextBtn = document.createElement('button');
+    addTextBtn.type = 'button';
+    addTextBtn.textContent = '+ Текст';
+    addTextBtn.addEventListener('click', () => {
+      s.blocks.push({ id: uid('block'), type: 'text', text: '' });
+      save();
+      renderEditor();
+      renderPhone();
+    });
+    const addListBtn = document.createElement('button');
+    addListBtn.type = 'button';
+    addListBtn.textContent = '+ Список';
+    addListBtn.addEventListener('click', () => {
+      s.blocks.push({ id: uid('block'), type: 'list', items: [''] });
+      save();
+      renderEditor();
+      renderPhone();
+    });
+    const addCalloutBtn = document.createElement('button');
+    addCalloutBtn.type = 'button';
+    addCalloutBtn.textContent = '+ Плашка';
+    addCalloutBtn.addEventListener('click', () => {
+      s.blocks.push({ id: uid('block'), type: 'callout', label: '', text: '' });
+      save();
+      renderEditor();
+      renderPhone();
+    });
+    addBlockRow.append(addTextBtn, addListBtn, addCalloutBtn);
+    blockList.appendChild(addBlockRow);
+
+    const shotLabel = document.createElement('label');
+    shotLabel.className = 'field-label';
+    shotLabel.textContent = 'Файлы шага (скриншоты, PDF, видео — можно несколько). Обложка шага — первое загруженное фото.';
+
+    if (!s.attachments) s.attachments = [];
+    const attachmentList = document.createElement('div');
+    attachmentList.className = 'attachment-list';
+    s.attachments.forEach((a) => {
+      if (a.includeInMaterials === undefined) a.includeInMaterials = false;
+      const chip = document.createElement('div');
+      chip.className = 'attachment-chip';
+      const isCover = s.attachments.find((x) => x.type === 'image') === a;
+      chip.innerHTML = `
+        <div class="thumb">${a.type === 'image' ? `<img src="${a.dataUrl}" alt="">` : fileIcon(a.type)}</div>
+        <div class="name">${escapeHtml(a.name)}</div>
+        ${isCover ? '<span class="cover-badge">обложка</span>' : ''}
+      `;
+      const materialsLabel = document.createElement('label');
+      materialsLabel.className = 'in-materials-toggle';
+      const materialsCheckbox = document.createElement('input');
+      materialsCheckbox.type = 'checkbox';
+      materialsCheckbox.checked = a.includeInMaterials;
+      materialsCheckbox.addEventListener('change', (e) => {
+        a.includeInMaterials = e.target.checked;
+        save();
+        renderPhone();
+      });
+      materialsLabel.append(materialsCheckbox, document.createTextNode(' в материалы'));
+      chip.appendChild(materialsLabel);
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'remove';
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', () => {
+        s.attachments = s.attachments.filter((x) => x.id !== a.id);
+        save();
+        renderEditor();
+        renderPhone();
+      });
+      chip.appendChild(removeBtn);
+      attachmentList.appendChild(chip);
+    });
+
+    const shotRow = document.createElement('div');
+    shotRow.className = 'shot-row';
+    const uploadBtn = document.createElement('button');
+    uploadBtn.type = 'button';
+    uploadBtn.className = 'upload-btn';
+    uploadBtn.textContent = '+ Добавить файл';
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.multiple = true;
+    fileInput.className = 'file-input';
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      let pending = files.length;
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          s.attachments.push({
+            id: uid('file'),
+            name: file.name,
+            type: fileKind(file.type, file.name),
+            dataUrl: reader.result,
+            includeInMaterials: false
+          });
+          pending -= 1;
+          if (pending === 0) {
+            save();
+            renderEditor();
+            renderPhone();
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+      fileInput.value = '';
+    });
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    shotRow.append(uploadBtn, fileInput);
+
+    frag.append(titleLabel, titleInput, textLabel, textWrap, blocksLabel, blockList, shotLabel, attachmentList, shotRow);
+    return frag;
+  }
+
+  function buildStepCard(s, { numberLabel, onDelete, deleteLabel, nested }) {
+    const card = document.createElement('div');
+    card.className = 'step-editor-card' + (openIds.has(s.id) ? ' open' : '') + (nested ? ' nested' : '');
+    card.dataset.stepId = s.id;
+
+    const head = document.createElement('div');
+    head.className = 'step-editor-head';
+    head.innerHTML = `<span class="step-num">${numberLabel}</span><span class="name">${escapeHtml(s.title || 'Новый шаг')}</span><span class="chev">›</span>`;
+    head.addEventListener('click', () => {
+      if (openIds.has(s.id)) openIds.delete(s.id); else openIds.add(s.id);
+      renderEditor();
+    });
+
+    const body = document.createElement('div');
+    body.className = 'step-editor-body';
+    body.appendChild(buildStepFieldset(s, { titlePlaceholder: 'Например: Подключаем канал в Telegram' }));
+
+    if (!s.children) s.children = [];
+    const subLabel = document.createElement('label');
+    subLabel.className = 'field-label';
+    subLabel.textContent = 'Подшаги';
+    const subList = document.createElement('div');
+    subList.className = 'block-list';
+    s.children.forEach((child, cIdx) => {
+      const childCard = buildStepCard(child, {
+        numberLabel: `${numberLabel}.${cIdx + 1}`,
+        deleteLabel: 'Удалить подшаг',
+        nested: true,
+        onDelete: () => {
+          s.children = s.children.filter((x) => x.id !== child.id);
+          openIds.delete(child.id);
+          save();
+          renderEditor();
+          renderPhone();
+        }
+      });
+      subList.appendChild(childCard);
+    });
+    const addSubBtn = document.createElement('button');
+    addSubBtn.type = 'button';
+    addSubBtn.className = 'add-step-btn';
+    addSubBtn.style.fontSize = '13px';
+    addSubBtn.style.padding = '9px';
+    addSubBtn.textContent = '+ Добавить подшаг';
+    addSubBtn.addEventListener('click', () => {
+      const child = { id: uid('step'), title: '', text: '', blocks: [], attachments: [], children: [] };
+      s.children.push(child);
+      openIds.add(child.id);
+      save();
+      renderEditor();
+      renderPhone();
+    });
+    subList.appendChild(addSubBtn);
+
+    const rowActions = document.createElement('div');
+    rowActions.className = 'row-actions';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'delete-btn';
+    delBtn.textContent = deleteLabel || 'Удалить шаг';
+    delBtn.addEventListener('click', () => onDelete());
+    rowActions.appendChild(delBtn);
+
+    body.append(subLabel, subList, rowActions);
+    card.append(head, body);
+    return card;
+  }
+
+  function renderEditor() {
+    const list = document.getElementById('step-editor-list');
+    list.innerHTML = '';
+    steps.forEach((s, idx) => {
+      const card = buildStepCard(s, {
+        numberLabel: String(idx + 1),
+        deleteLabel: 'Удалить шаг',
+        onDelete: () => {
+          steps = steps.filter((x) => x.id !== s.id);
+          openIds.delete(s.id);
+          save();
+          renderEditor();
+          renderPhone();
+        }
+      });
+      list.appendChild(card);
+    });
+  }
+
+  function renderEditorTitles() {
+    // Обновляет подписи в свёрнутых заголовках карточек без полной перерисовки (не сбивает фокус в полях)
+    document.querySelectorAll('.step-editor-card').forEach((cardEl) => {
+      const id = cardEl.dataset.stepId;
+      const s = findStepById(id);
+      if (s) {
+        const nameEl = cardEl.querySelector(':scope > .step-editor-head .name');
+        if (nameEl) nameEl.textContent = s.title || 'Новый шаг';
+      }
+    });
+  }
+
+  function findStepById(id, list) {
+    for (const s of (list || steps)) {
+      if (s.id === id) return s;
+      const found = findStepById(id, s.children || []);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  document.getElementById('add-step-btn').addEventListener('click', () => {
+    const s = { id: uid(), title: '', text: '', blocks: [], attachments: [], children: [] };
+    steps.push(s);
+    openIds.add(s.id);
+    save();
+    renderEditor();
+    renderPhone();
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (!confirm('Сбросить все шаги и тексты к примеру?')) return;
+    steps = JSON.parse(JSON.stringify(sample));
+    settings = Object.assign({}, defaultSettings);
+    completed = new Set();
+    openIds.clear();
+    if (steps[0]) openIds.add(steps[0].id);
+    save();
+    saveSettings();
+    renderEditor();
+    bindSettingsFields();
+    applySettingsToPhone();
+    renderPhone();
+  });
+
+  function extFromName(name) {
+    const m = /\.[a-zA-Z0-9]+$/.exec(name || '');
+    return m ? m[0] : '';
+  }
+
+  function exportStep(s) {
+    return {
+      id: s.id,
+      title: s.title,
+      text: s.text,
+      blocks: (s.blocks || []).map((b) => {
+        if (b.type === 'list') return { type: 'list', items: (b.items || []).filter((i) => i.trim()) };
+        if (b.type === 'callout') return { type: 'callout', label: b.label, text: b.text };
+        return { type: 'text', text: b.text };
+      }),
+      attachments: (s.attachments || []).map((a, i) => ({
+        type: a.type,
+        file: '/files/' + s.id + '-' + i + extFromName(a.name),
+        includeInMaterials: !!a.includeInMaterials
+      })),
+      children: (s.children || []).map(exportStep)
+    };
+  }
+
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const exportData = {
+      appTitle: settings.appTitle,
+      lockedTitle: settings.lockedTitle,
+      lockedText: settings.lockedText,
+      completeButtonText: settings.completeBtn,
+      steps: steps.map(exportStep)
+    };
+    document.getElementById('export-textarea').value = JSON.stringify(exportData, null, 2);
+    document.getElementById('copy-status').textContent = '';
+    document.getElementById('export-modal').style.display = 'flex';
+  });
+  document.getElementById('close-modal-btn').addEventListener('click', () => {
+    document.getElementById('export-modal').style.display = 'none';
+  });
+  document.getElementById('copy-json-btn').addEventListener('click', async () => {
+    const textarea = document.getElementById('export-textarea');
+    const status = document.getElementById('copy-status');
+    try {
+      await navigator.clipboard.writeText(textarea.value);
+      status.textContent = 'Скопировано в буфер обмена.';
+    } catch (e) {
+      textarea.select();
+      status.textContent = 'Не удалось скопировать автоматически — текст выделен, нажми Ctrl+C / Cmd+C.';
+    }
+  });
+
+  // ---------- Тема ----------
+  document.getElementById('theme-switch').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-theme]');
+    if (!btn) return;
+    document.querySelectorAll('#theme-switch button').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.documentElement.setAttribute('data-theme', btn.dataset.theme);
+  });
+
+  bindSettingsFields();
+  applySettingsToPhone();
+  renderEditor();
+  renderPhone();
+})();
+</script>
